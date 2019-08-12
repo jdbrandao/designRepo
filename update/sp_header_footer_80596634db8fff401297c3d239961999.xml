@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_header_footer">
+    <sp_header_footer action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script/>
+        <controller_as>c</controller_as>
+        <css>&#13;
+.lmi-navbar {&#13;
+  min-height: 100%;&#13;
+  width: 250px;&#13;
+  position: fixed;&#13;
+  border-radius: 0;&#13;
+  z-index: 1;&#13;
+  top: 0;&#13;
+  left: 0;&#13;
+  background-color: #001871;&#13;
+  overflow-x: hidden;&#13;
+  padding-top: 16px;&#13;
+}&#13;
+&#13;
+.lmi-navbar .navbar-nav &gt; li {&#13;
+ float: none;&#13;
+ width: 250px;&#13;
+}&#13;
+&#13;
+&#13;
+.dropdown-menu {&#13;
+  background-color: #001871;&#13;
+  border: 0px;&#13;
+  border-radius: 0;&#13;
+  box-shadow: none;&#13;
+  width: 250px;&#13;
+}&#13;
+&#13;
+/* Style sidebar links */&#13;
+.lmi-navbar a, .dropdown-btn{&#13;
+  padding: 10px 8px 10px 16px;&#13;
+  text-decoration: none;&#13;
+ 	font-size: 16px;&#13;
+  color: #FFF;&#13;
+  display: block;&#13;
+  border: none;&#13;
+  background: none;&#13;
+  width:100%;&#13;
+  text-align: left;&#13;
+  cursor: pointer;&#13;
+  outline: none;&#13;
+}&#13;
+&#13;
+/* Style links on mouse-over */&#13;
+.lmi-navbar a:hover, .dropdown-btn:hover{&#13;
+  background-color: #E35205;&#13;
+}&#13;
+&#13;
+/* Style the main content */&#13;
+.widget-content {&#13;
+  margin-left: 250px; /* Same as the width of the sidenav */&#13;
+  padding: 0px 10px;&#13;
+}&#13;
+&#13;
+.lmi-logo {&#13;
+ width: 60%;&#13;
+ padding-left: 12px;&#13;
+}&#13;
+&#13;
+.logo-cont {&#13;
+  text-align: center;&#13;
+}&#13;
+&#13;
+/* Navbar Header  */&#13;
+&#13;
+.lmi-navbar-header {&#13;
+  color: #FFF;&#13;
+  padding: 6px 0px 6px 0px;&#13;
+  font-family: 'Georgia';&#13;
+   text-align: center;&#13;
+}&#13;
+&#13;
+/* Add media queries for small screens (when the height of the screen is less than 450px, add a smaller padding and font-size) */&#13;
+@media screen and (max-height: 450px) {&#13;
+  .lmi-navbar {padding-top: 15px;}&#13;
+  .lmi-navbar a {font-size: 18px;}&#13;
+}&#13;
+&#13;
+&#13;
+.dropdown-container {&#13;
+  display: none;&#13;
+  font-size: 5px;&#13;
+  padding-left: 8px;&#13;
+}&#13;
+&#13;
+.dropdown-container a:hover{&#13;
+  background-color: #001871;&#13;
+  color: #E35205;&#13;
+}&#13;
+&#13;
+/* caret down icon */&#13;
+.fa-caret-down {&#13;
+  float: right;&#13;
+  padding-right: 8px;&#13;
+}&#13;
+&#13;
+.iframe-style {&#13;
+  width: 100%;&#13;
+  height: 850px;&#13;
+  border: 0px;&#13;
+  animation: lmi-slide-right .5s ease;&#13;
+}&#13;
+&#13;
+/* Animations */&#13;
+&#13;
+&#13;
+@keyframes lmi-slide-right {&#13;
+  from{&#13;
+    margin-left: -100%;&#13;
+  }&#13;
+  to {&#13;
+    margin-left: 0:&#13;
+  }&#13;
+}&#13;
+</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>false</has_preview>
+        <id>dr-nav</id>
+        <internal>false</internal>
+        <link/>
+        <name>Design Repo Navigation</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script/>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_header_footer</sys_class_name>
+        <sys_created_by>jbrandao</sys_created_by>
+        <sys_created_on>2019-08-01 14:57:40</sys_created_on>
+        <sys_customer_update>false</sys_customer_update>
+        <sys_id>80596634db8fff401297c3d239961999</sys_id>
+        <sys_mod_count>9</sys_mod_count>
+        <sys_name>Design Repo Navigation</sys_name>
+        <sys_package display_value="Design Repo" source="x_lmio_design_repo">8a8b1c771beaf3005a07620f6e4bcbb2</sys_package>
+        <sys_policy/>
+        <sys_replace_on_upgrade>false</sys_replace_on_upgrade>
+        <sys_scope display_value="Design Repo">8a8b1c771beaf3005a07620f6e4bcbb2</sys_scope>
+        <sys_update_name>sp_header_footer_80596634db8fff401297c3d239961999</sys_update_name>
+        <sys_updated_by>jbrandao</sys_updated_by>
+        <sys_updated_on>2019-08-01 17:50:45</sys_updated_on>
+        <template><![CDATA[<div class="wrap-it-up">
+<div class="lmi-navbar">
+  <div class="lmi-navbar-header">
+      <h4 class="logo-cont">
+        <img class="lmi-logo" ng-src="{{::portal.logo}}">
+      </h4>
+      <h3>
+        Design Repo
+      </h3>
+    </div>
+  <ul class="nav navbar-nav">
+    <li><a href="#home"><i class="fa fa-home" aria-hidden="true"></i> Home</a></li>
+    <li role="separator" class="divider"></li>
+    <li class="dropdown">
+      <a class="dropdown-toggle" href="#" data-toggle="dropdown" role="button"><i class="fa fa-paint-brush" aria-hidden="true"></i> Front-end <i class="fa fa-caret-down"></i></a>
+    <ul class="dropdown-menu">
+       <li> <a href="#">Coding snippets</a></li>
+      <li> <a href="#">Animations</a></li>
+      </ul>
+    </li>
+    
+    <li class="dropdown">
+      <a class="dropdown-toggle" href="#" data-toggle="dropdown" role="button"><i class="fa fa-server" aria-hidden="true"></i> Back-end <i class="fa fa-caret-down"></i></a>
+    <ul class="dropdown-menu">
+       <li><a href="#home">Back-end topic 1</a></li>
+      <li><a href="#home">Back-end topic 2</a></li>
+      </ul>
+    </li>
+  </ul>
+  </div>
+  
+  <div class="widget-content">
+    
+    <!--  
+   <div class="accordion" id="accordion">
+  <div class="card">
+    <div class="card-header" id="headingOne">
+      <h5 class="mb-0">
+        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+          Collapsible Group Item #1
+        </button>
+      </h5>
+    </div>
+
+    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+      <div class="card-body">
+        Sed feugiat egestas nisl sed faucibus. Fusce nisi metus, accumsan eget ullamcorper eget, iaculis id augue. Vivamus porta elit id nulla varius, in sodales massa bibendum. Nullam condimentum pellentesque est, vel lacinia ipsum efficitur sed. Morbi porttitor porta commodo. Sed feugiat egestas nisl sed faucibus. Fusce nisi metus, accumsan eget ullamcorper eget, iaculis id augue. Vivamus porta elit id nulla varius, in sodales massa bibendum. Nullam condimentum pellentesque est, vel lacinia ipsum efficitur sed. Morbi porttitor porta commodo.
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header" id="headingTwo">
+      <h5 class="mb-0">
+        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+          Collapsible Group Item #2
+        </button>
+      </h5>
+    </div>
+    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+      <div class="card-body">
+        Sed feugiat egestas nisl sed faucibus. Fusce nisi metus, accumsan eget ullamcorper eget, iaculis id augue. Vivamus porta elit id nulla varius, in sodales massa bibendum. Nullam condimentum pellentesque est, vel lacinia ipsum efficitur sed. Morbi porttitor porta commodo. Sed feugiat egestas nisl sed faucibus. Fusce nisi metus, accumsan eget ullamcorper eget, iaculis id augue. Vivamus porta elit id nulla varius, in sodales massa bibendum. Nullam condimentum pellentesque est, vel lacinia ipsum efficitur sed. Morbi porttitor porta commodo.
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header" id="headingThree">
+      <h5 class="mb-0">
+        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+          Collapsible Group Item #3
+        </button>
+      </h5>
+    </div>
+    <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+      <div class="card-body">
+        Sed feugiat egestas nisl sed faucibus. Fusce nisi metus, accumsan eget ullamcorper eget, iaculis id augue. Vivamus porta elit id nulla varius, in sodales massa bibendum. Nullam condimentum pellentesque est, vel lacinia ipsum efficitur sed. Morbi porttitor porta commodo. Sed feugiat egestas nisl sed faucibus. Fusce nisi metus, accumsan eget ullamcorper eget, iaculis id augue. Vivamus porta elit id nulla varius, in sodales massa bibendum. Nullam condimentum pellentesque est, vel lacinia ipsum efficitur sed. Morbi porttitor porta commodo.
+      </div>
+    </div>
+  </div>
+</div>
+    -->
+  </div>
+  
+  
+  
+  
+</div> 
+]]></template>
+    </sp_header_footer>
+</record_update>

@@ -1,0 +1,464 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[
+
+
+
+
+
+
+
+/* function($uibModal, spUtil) {*/
+	/* widget controller */
+	/* var c = this;
+
+	c.loadWidget = function(widgetName, dataObjName) {
+		// Don't load widget again if it already exists
+		c.data.loading = 'loading';
+		
+		if (!c.data[dataObjName]) {
+			spUtil.get(widgetName, {}).then( function(response) { 
+				c.data[dataObjName] = response;
+				c.data.loading = 'complete';
+			});
+		}
+		else {
+				c.data.loading = 'complete';
+		}
+	}
+}
+*/]]></client_script>
+        <controller_as>c</controller_as>
+        <css>
+.lmi-navbar {
+  min-height: 100%;
+  width: 250px;
+  position: fixed;
+  border-radius: 0;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: #001871;
+  overflow-x: hidden;
+  padding-top: 16px;
+}
+
+.lmi-navbar .navbar-nav &gt; li {
+ float: none;
+ width: 250px;
+}
+
+
+.dropdown-menu {
+  background-color: #001871;
+  border: 0px;
+  border-radius: 0;
+  box-shadow: none;
+  width: 250px;
+}
+
+/* Style sidebar links */
+.lmi-navbar a, .dropdown-btn{
+  padding: 10px 8px 10px 16px;
+  text-decoration: none;
+ 	font-size: 16px;
+  color: #FFF;
+  display: block;
+  border: none;
+  background: none;
+  width:100%;
+  text-align: left;
+  cursor: pointer;
+  outline: none;
+}
+
+/* Style links on mouse-over */
+.lmi-navbar a:hover, .dropdown-btn:hover{
+  background-color: #E35205;
+}
+
+/* Style the main content */
+.widget-content {
+  margin-left: 250px; /* Same as the width of the sidenav */
+  padding: 0px 10px;
+}
+
+.lmi-logo {
+ width: 60%;
+ padding-left: 12px;
+}
+
+.logo-cont {
+  text-align: center;
+}
+
+/* Navbar Header  */
+
+.lmi-navbar-header {
+  color: #FFF;
+  padding: 6px 0px 6px 0px;
+  font-family: 'Georgia';
+   text-align: center;
+}
+
+/* Add media queries for small screens (when the height of the screen is less than 450px, add a smaller padding and font-size) */
+@media screen and (max-height: 450px) {
+  .lmi-navbar {padding-top: 15px;}
+  .lmi-navbar a {font-size: 18px;}
+}
+
+
+.dropdown-container {
+  display: none;
+  font-size: 5px;
+  padding-left: 8px;
+}
+
+.dropdown-container a:hover{
+  background-color: #001871;
+  color: #E35205;
+}
+
+/* caret down icon */
+.fa-caret-down {
+  float: right;
+  padding-right: 8px;
+}
+
+.iframe-style {
+  width: 100%;
+  height: 850px;
+  border: 0px;
+  animation: lmi-slide-right .5s ease;
+}
+
+/* Animations */
+
+
+@keyframes lmi-slide-right {
+  from{
+    margin-left: -100%;
+  }
+  to {
+    margin-left: 0:
+  }
+}
+
+
+</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>true</has_preview>
+        <id>design_repo</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {  }]]></link>
+        <name>Design Repo</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[/* (function() {
+	data.loading = 'complete';
+
+	var lmiUtils = new global.LMIGeneralUtils();
+
+	var grSupervisorCheck = new GlideRecord('u_personnel_data');
+	grSupervisorCheck.addQuery('u_direct_supervisor.u_user', gs.getUserID());
+	grSupervisorCheck.query();
+
+	var grDepartmentLeadershipCheck = new GlideRecordSecure('cmn_department');
+	grDepartmentLeadershipCheck.addQuery('dept_head', gs.getUserID())
+		.addOrCondition('u_l2', gs.getUserID());
+	grDepartmentLeadershipCheck.query();
+
+	var grEmployeeLeadershipCheck = new GlideRecordSecure('u_personnel_data');
+	grEmployeeLeadershipCheck.addQuery('u_l3.u_user', gs.getUserID());
+	grEmployeeLeadershipCheck.query();
+
+	var grPersonnelRole = new GlideRecordSecure('u_personnel_data');
+	grPersonnelRole.get('u_user', gs.getUserID());
+
+	var grAltReviewerCheck = new GlideRecordSecure('x_lmio_hrmsys_perf_eval');
+	grAltReviewerCheck.addQuery('u_alternate_reviewer.u_user', gs.getUserID());
+	grAltReviewerCheck.query();
+
+	var isPerfEvalAdmin = lmiUtils.hasRole(gs.getUserID(), 'x_lmio_hrmsys.perf_eval_admin');
+	var isPL = (grPersonnelRole.getRowCount() > 0 && grPersonnelRole.getValue('u_is_pl') == true);
+
+	data.showEmployeeTab = true;
+	data.showFeedbackTab = isPerfEvalAdmin ||
+		lmiUtils.hasRole(gs.getUserID(), 'x_lmio_hrmsys.perf_eval_non_pl_feedback_access') ||
+		grSupervisorCheck.getRowCount() > 0 || 
+		grDepartmentLeadershipCheck.getRowCount() > 0 || 
+		isPL;
+
+	data.showManagerTab = isPerfEvalAdmin ||
+		grDepartmentLeadershipCheck.getRowCount() > 0 || 
+		grEmployeeLeadershipCheck.getRowCount() > 0 ||		
+		grAltReviewerCheck.getRowCount() > 0;
+	data.showMidYearTab = isPerfEvalAdmin ||
+		grSupervisorCheck.getRowCount() > 0 || 
+		isPL;
+	data.startTab = $sp.getParameter('start') || 0;
+
+	data.widgetWelcome = $sp.getWidget('performance_365_welcome', {});
+	data.widgetEmployeeComments = $sp.getWidget('performance_365_self_eval', {});
+	data.widgetHistory = $sp.getWidget('performance_365_history', {});	
+})();
+*/]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>jbrandao</sys_created_by>
+        <sys_created_on>2019-07-16 15:46:47</sys_created_on>
+        <sys_customer_update>false</sys_customer_update>
+        <sys_id>d5d560fb1baef3005a07620f6e4bcbbe</sys_id>
+        <sys_mod_count>196</sys_mod_count>
+        <sys_name>Design Repo</sys_name>
+        <sys_package display_value="Design Repo" source="x_lmio_design_repo">8a8b1c771beaf3005a07620f6e4bcbb2</sys_package>
+        <sys_policy/>
+        <sys_replace_on_upgrade>false</sys_replace_on_upgrade>
+        <sys_scope display_value="Design Repo">8a8b1c771beaf3005a07620f6e4bcbb2</sys_scope>
+        <sys_update_name>sp_widget_d5d560fb1baef3005a07620f6e4bcbbe</sys_update_name>
+        <sys_updated_by>jbrandao</sys_updated_by>
+        <sys_updated_on>2019-07-25 14:22:22</sys_updated_on>
+        <template><![CDATA[<div class="wrap-it-up">
+<div class="lmi-navbar">
+  <div class="lmi-navbar-header">
+      <h4 class="logo-cont">
+        <img class="lmi-logo" src="lmi-logo-only-white.png">
+      </h4>
+      <h3>
+        Design Repo
+      </h3>
+    </div>
+  <ul class="nav navbar-nav">
+    <li><a href="#home"><i class="fa fa-home" aria-hidden="true"></i> Home</a></li>
+    <li role="separator" class="divider"></li>
+    <li class="dropdown">
+      <a class="dropdown-toggle" href="#" data-toggle="dropdown" role="button"><i class="fa fa-paint-brush" aria-hidden="true"></i> Front-end <i class="fa fa-caret-down"></i></a>
+    <ul class="dropdown-menu">
+       <li> <a href="#" ng-click="iframeCSSHeirarchy = !iframeCSSHeirarchy">Coding snippets</a></li>
+      <li> <a href="#" ng-click="iframeAnimation = !iframeAnimation">Animations</a></li>
+      </ul>
+    </li>
+    
+    <li class="dropdown">
+      <a class="dropdown-toggle" href="#" data-toggle="dropdown" role="button"><i class="fa fa-server" aria-hidden="true"></i> Back-end <i class="fa fa-caret-down"></i></a>
+    <ul class="dropdown-menu">
+       <li><a href="#home">Back-end topic 1</a></li>
+      <li><a href="#home">Back-end topic 2</a></li>
+      </ul>
+    </li>
+  </ul>
+  </div>
+ 
+  
+  
+  
+  <!-- Navigation  -->
+ <!-- <div class="lmi-navbar">
+    <div class="lmi-navbar-header">
+      <h4 class="logo-cont">
+        <img class="lmi-logo" src="lmi-logo-only-white.png">
+      </h4>
+      <h3>
+        Design Repo
+      </h3>
+    </div>
+    
+    <ul class="nav nav-stacked"></ul>
+    <li class="nav-item"><a class="nav-link" href="#home"><i class="fa fa-home" aria-hidden="true"></i> Home</a></li>
+      
+    
+    
+     		<a href="#home"><i class="fa fa-home" aria-hidden="true"></i> Home</a>
+    
+    		<button class="dropdown-btn"><i class="fa fa-paint-brush" aria-hidden="true"></i> Front-end <i class="fa fa-caret-down"></i></button>
+    		<div class="dropdown-container">
+          <a ng-click="iframeCSSHeirarchy = !iframeCSSHeirarchy" href="#code-snips">Coding snippets</a>
+          <a ng-click="iframeAnimation = !iframeAnimation" href="#animations">Animations</a>
+        </div>
+       
+   		 <button class="dropdown-btn"><i class="fa fa-server" aria-hidden="true"></i> Back-end <i class="fa fa-caret-down"></i></button>
+    		<div class="dropdown-container">
+          <a href="#home">Back-end topic 1</a>
+          <a href="#home">Back-end topic 2</a>
+          <a href="#home">Back-end topic 3</a>
+        </div>
+    
+    <button class="dropdown-btn"><i class="fa fa-picture-o" aria-hidden="true"></i> Complete solutions <i class="fa fa-caret-down"></i></button>
+    		<div class="dropdown-container">
+          <a href="#single-page-app">Single-page application</a>
+        </div>
+        
+
+    		<a href="/nav_to.do"><i class="fa fa-eercast" aria-hidden="true"></i> LMI-Core</a>
+
+  </div>
+   
+  
+  <!-- Widget Embedded Content  -->
+  
+  <div class="widget-content">
+    
+    <!-- <iframe ng-class="{'hidden':  !iframeCSSHeirarchy}" class="iframe-style" src="/sp?id=kb_article&sys_id=f44a470ddb46bf80f0d97ecfbf96191a"></iframe> -->
+    <iframe ng-class="{'hidden':  !iframeAnimation}" class="iframe-style" src="/dr?id=dr_animations"></iframe>
+    
+    <div ng-class="{'hidden':  !iframeCSSHeirarchy}">
+      
+   <div class="accordion" id="accordion">
+  <div class="card">
+    <div class="card-header" id="headingOne">
+      <h5 class="mb-0">
+        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+          Collapsible Group Item #1
+        </button>
+      </h5>
+    </div>
+
+    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+      <div class="card-body">
+        Sed feugiat egestas nisl sed faucibus. Fusce nisi metus, accumsan eget ullamcorper eget, iaculis id augue. Vivamus porta elit id nulla varius, in sodales massa bibendum. Nullam condimentum pellentesque est, vel lacinia ipsum efficitur sed. Morbi porttitor porta commodo. Sed feugiat egestas nisl sed faucibus. Fusce nisi metus, accumsan eget ullamcorper eget, iaculis id augue. Vivamus porta elit id nulla varius, in sodales massa bibendum. Nullam condimentum pellentesque est, vel lacinia ipsum efficitur sed. Morbi porttitor porta commodo.
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header" id="headingTwo">
+      <h5 class="mb-0">
+        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+          Collapsible Group Item #2
+        </button>
+      </h5>
+    </div>
+    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+      <div class="card-body">
+        Sed feugiat egestas nisl sed faucibus. Fusce nisi metus, accumsan eget ullamcorper eget, iaculis id augue. Vivamus porta elit id nulla varius, in sodales massa bibendum. Nullam condimentum pellentesque est, vel lacinia ipsum efficitur sed. Morbi porttitor porta commodo. Sed feugiat egestas nisl sed faucibus. Fusce nisi metus, accumsan eget ullamcorper eget, iaculis id augue. Vivamus porta elit id nulla varius, in sodales massa bibendum. Nullam condimentum pellentesque est, vel lacinia ipsum efficitur sed. Morbi porttitor porta commodo.
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header" id="headingThree">
+      <h5 class="mb-0">
+        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+          Collapsible Group Item #3
+        </button>
+      </h5>
+    </div>
+    <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+      <div class="card-body">
+        Sed feugiat egestas nisl sed faucibus. Fusce nisi metus, accumsan eget ullamcorper eget, iaculis id augue. Vivamus porta elit id nulla varius, in sodales massa bibendum. Nullam condimentum pellentesque est, vel lacinia ipsum efficitur sed. Morbi porttitor porta commodo. Sed feugiat egestas nisl sed faucibus. Fusce nisi metus, accumsan eget ullamcorper eget, iaculis id augue. Vivamus porta elit id nulla varius, in sodales massa bibendum. Nullam condimentum pellentesque est, vel lacinia ipsum efficitur sed. Morbi porttitor porta commodo.
+      </div>
+    </div>
+  </div>
+</div>
+    
+  </div>
+  
+  
+  
+  
+</div> 
+
+
+<!-- <div>
+  <table>
+    <tr>
+      <td class="navcolumn hideOnPrint" valign="top" width="200px" height="500px">
+
+        <div class="nav flex-column nav-pills hideOnPrint" id="v-pills-tab" role="tablist" aria-orientation="vertical"style="margin-bottom: 40px;" >
+
+          <!-- Tabs here -->
+       <!--   <ul class="nav nav-pills nav-stacked">
+
+            <!-- Welcome tab -->
+       <!--     <li ng-class="{active: (data.startTab == 0)}"><a data-toggle="pill" role ="tab" href="#welcome">Welcome</a></li>
+
+            <!-- My Self-Evaluation tab -->
+         <!--   <li ng-class="{active: (data.startTab == 1)}"><a data-toggle="pill" role ="tab" href="#employee">My Self-Evaluation</a></li>
+
+            <!-- My Performance History tab -->
+         <!--   <li ng-class="{active: (data.startTab == 2)}"><a data-toggle="pill" role ="tab" href="#history">My Performance History</a></li>
+
+            <!-- Provide Feedback tab -->
+         <!--   <li ng-class="{active: (data.startTab == 3)}" 
+                ng-init="(data.startTab == 3 ? c.loadWidget('performance_365_other_comments', 'widgetOtherComments') : '')"  
+                ng-click="c.loadWidget('performance_365_other_comments', 'widgetOtherComments');"
+                ng-if="data.showFeedbackTab == true">
+              <a data-toggle="pill" role ="tab" href="#feedback">Provide Feedback</a></li>
+
+            <!-- Mid-Year Conversations tab -->
+        <!--    <li ng-class="{active: (data.startTab == 4)}" 
+                ng-init="(data.startTab == 4 ? c.loadWidget('performance_365_mid_year', 'widgetMidYearConversation') : '')"  
+                ng-click="c.loadWidget('performance_365_mid_year', 'widgetMidYearConversation');"
+                ng-if="data.showMidYearTab == true">
+              <a data-toggle="pill" role ="tab" href="#midyear">Mid-Year Conversations</a>
+            </li>
+
+            <!-- Manager Review tab -->
+          <!--  <li ng-class="{active: (data.startTab == 5)}"
+                ng-init="(data.startTab == 5 ? c.loadWidget('performance_365_review', 'widgetManagerReview') : '')"  
+                ng-click="c.loadWidget('performance_365_review', 'widgetManagerReview');"
+                ng-if="data.showManagerTab == true">
+              <a data-toggle="pill" role ="tab" href="#manager">Performance Reviews</a>
+            </li>
+
+            <!-- Employee's Performance History tab -->
+        <!--    <li ng-class="{active: (data.startTab == 6)}"
+                ng-init="(data.startTab == 6 ? c.loadWidget('performance_365_employee_history', 'widgetEmployeeHistory') : '')"  
+                ng-click="c.loadWidget('performance_365_employee_history', 'widgetEmployeeHistory');"
+                ng-if="data.showManagerTab == true">
+              <a data-toggle="pill" role ="tab" href="#employeehistory">Employee Performance History</a>
+            </li>
+            <li ng-class="{active: (data.startTab == 7)}"> 
+              <!-- data-toggle element breaks 'a' tag, jQuery will not accept URL as href-->
+        <!--      <a role="tab" target="_blank" 
+                 href="https://mylmi.lmi.org/es/HR/Performance365/Pages/Tips-and-Tricks.aspx">Conversation Tips and Tricks</a>
+            </li>
+          </ul>
+        </div>
+      </td>
+      <td valign="top">
+        <!-- Tab content here --> 
+   <!--     <div class="tab-content" id="v-pills-tabContent">
+
+          <div class="loader"  style="margin-left: auto;margin-right: auto;" ng-class="(c.data.loading == 'complete' ? 'hide-loader' : '')">
+            <!-- ng-if="c.data.loading != 'complete'">  -->
+        <!--  </div>
+
+          <div id="welcome" class="tab-pane fade in" ng-class="{active: (data.startTab == 0)}">
+            <sp-widget ng-if="data.widgetWelcome" widget="data.widgetWelcome"></sp-widget>
+          </div>
+
+          <div id="employee" class="tab-pane fade in" ng-class="{active: (data.startTab == 1)}">
+            <sp-widget ng-if="data.widgetEmployeeComments" widget="data.widgetEmployeeComments"></sp-widget>
+          </div>
+
+          <div id="history" class="tab-pane fade in" ng-class="{active: (data.startTab == 2)}">
+            <sp-widget ng-if="data.widgetHistory" widget="data.widgetHistory"></sp-widget>
+          </div>
+
+          <div id="feedback" ng-if="data.showFeedbackTab" class="tab-pane fade in" ng-class="{active: (data.startTab == 3)}">
+            <sp-widget ng-if="data.widgetOtherComments" widget="data.widgetOtherComments"></sp-widget>
+          </div>
+
+          <div id="midyear" ng-if="data.showMidYearTab" class="tab-pane fade in" ng-class="{active: (data.startTab == 4)}">
+            <sp-widget ng-if="data.widgetMidYearConversation" widget="data.widgetMidYearConversation"></sp-widget>
+          </div>
+
+          <div id="manager" ng-if="data.showManagerTab" class="tab-pane fade in" ng-class="{active: (data.startTab == 5)}">
+            <sp-widget ng-if="data.widgetManagerReview" widget="data.widgetManagerReview"></sp-widget>       
+          </div>
+
+          <div id="employeehistory" class="tab-pane fade in" ng-class="{active: (data.startTab == 6)}">
+            <sp-widget ng-if="data.widgetEmployeeHistory" widget="data.widgetEmployeeHistory"></sp-widget>
+          </div>
+        </div>
+      </td>
+    </tr>
+  </table>
+-->]]></template>
+    </sp_widget>
+</record_update>
